@@ -3,38 +3,42 @@
  
 using namespace std;
  
-bool checkPalindrome(const string &word) {
-    if (word.size() == 1)return true;
-    int rightPos = word.size()-1;
-    int leftPos = 0;
-    while (leftPos < rightPos) {
-        if(word[leftPos] != word[rightPos]) {
-            return false;
-        }
-        ++leftPos;
-        ++rightPos;
-    }
-    return true;
-}
- 
-int countPalindromes(const string &text) {
-    string tempWord = "";
-    int result = 0;
-    for (char i : text) {
-        if (i == " ") {
-            if(checkPalindrome(tempWord))
-                ++result;
-            tempWord = ""
+pair<int, int> FindVowels(const string &words, int position) {
+    int startVowels = -1, len = 0;
+    for (int i = position; i < words.size(); ++i) {
+        if (words[i] == 'a' || words[i] == 'e' || words[i] == 'i' ||
+            words[i] == 'o' || words[i] == 'u' || words[i] == 'y' ||
+            words[i] == 'A' || words[i] == 'E' || words[i] == 'I' ||
+            words[i] == 'O' || words[i] == 'U' || words[i] == 'Y') {
+            if (startVowels == -1) {
+                startVowels = i;
+                len = 1;
+            } else {
+                ++len;
+            }
         } else {
-            tempWord.push_back(i);
+            if(startVowels != -1) {
+                return {startVowels, len};
+            }
         }
     }
- 
+    return {startVowels, len};
 }
+ 
+#include <iostream>
+#include <string>
+ 
+using namespace std;
  
 int main() {
-    string s;
-    cin >> s;
-    int answ = scountPalindromes(s);
-    cout << answ;
+    string text;
+    getline(cin, text);
+    size_t pos = 0;
+    while (true) {
+        auto [start, length] = FindVowels(text, pos);
+        if (start == string::npos)
+            break;
+        cout << start << " " << length << " " << text.substr(start, length) << "\n";
+        pos = start + length;
+    }
 }
